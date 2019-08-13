@@ -29,7 +29,20 @@ router.get("/:id", validateUserId, (req, res) => {
   });
 });
 
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, async (req, res) => {
+  const { user } = req;
+
+  try {
+    const posts = await User.getUserPosts(user.id);
+    res.status(200).json({
+      posts
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "some message"
+    });
+  }
+});
 
 router.delete("/:id", (req, res) => {});
 
