@@ -51,7 +51,11 @@ router.put("/:id", [validatePostId, validatePost], async (req, res) => {
         ...req.body
       }
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: "Internal Server Error"
+    });
+  }
 });
 
 // custom middleware
@@ -71,7 +75,9 @@ async function validatePostId(req, res, next) {
     req.post = post;
     next();
   } catch (error) {
-    res.status(500);
+    res.status(500).json({
+      errorMessage: "Internal Server Error"
+    });
   }
 }
 
