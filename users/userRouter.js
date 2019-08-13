@@ -70,7 +70,20 @@ router.get("/:id/posts", validateUserId, async (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, async (req, res) => {
+  try {
+    await User.remove(req.user.id);
+
+    res.status(200).json({
+      message: "Successfully deleted user",
+      user: req.user
+    });
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: "Internal server error"
+    });
+  }
+});
 
 router.put("/:id", (req, res) => {});
 
