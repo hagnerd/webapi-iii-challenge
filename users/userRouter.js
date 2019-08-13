@@ -4,6 +4,24 @@ const Post = require("../posts/postDb");
 
 const router = express.Router();
 
+const validatePost = (req, res, next) => {
+  if (req.body === undefined || Object.keys(req.body).length === 0) {
+    res.status(400).json({
+      message: "missing post data"
+    });
+    return;
+  }
+
+  if (req.body.text === undefined) {
+    res.status(400).json({
+      message: "missing required text field"
+    });
+    return;
+  }
+
+  next();
+};
+
 router.post("/", validateUser, async (req, res) => {
   try {
     const user = await User.insert(req.body);
@@ -139,22 +157,6 @@ function validateUser(req, res, next) {
   next();
 }
 
-function validatePost(req, res, next) {
-  if (req.body === undefined || Object.keys(req.body).length === 0) {
-    res.status(400).json({
-      message: "missing post data"
-    });
-    return;
-  }
+exports.validatePost = validatePost;
 
-  if (req.body.text === undefined) {
-    res.status(400).json({
-      message: "missing required text field"
-    });
-    return;
-  }
-
-  next();
-}
-
-module.exports = router;
+exports.router = router;
